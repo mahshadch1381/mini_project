@@ -1,14 +1,14 @@
 import java.util.Scanner;
 public class bazi {
     static bazikon []players =new bazikon[1000];
-     static int n;
+    static int n;
      public static int chek(){
          int tedad_ma=0,tedad_shahr=0;
       for (int i=0;i<n;i++){
           if(players[i].dead==0&&(players[i].naghsh==1||players[i].naghsh==2||players[i].naghsh==3)){
               tedad_ma++;
           }
-          if(players[i].dead==0&&(players[i].naghsh==-1||players[i].naghsh==-2||players[i].naghsh==-3)){
+          if(players[i].dead==0&&(players[i].naghsh==-1||players[i].naghsh==-2||players[i].naghsh==-3||players[i].naghsh==-4)){
               tedad_shahr++;
           }
       }
@@ -36,9 +36,10 @@ public class bazi {
          System.out.println(mafi);
          System.out.println(shahr);
      }
-    public static void create(String [] a ,int n){
-       for (int i=0;i<n;i++){
-         players[i].name=a[i];
+    public static void create(String [] a ,int n) {
+        for (int i=0;i<n;i++){
+            players[i]=new bazikon();
+            players[i].name=a[i];
         }
     }
     public static void assign(String a){
@@ -49,7 +50,7 @@ public class bazi {
         String c=a.substring(s2+1);
         int x=0;
         for (int i=0;i<n;i++){
-            if(players[i].name.equals(b)){
+            if(players[i].name.contains(b)){
                 players[i].teeen_naghsh(c);
                 break;
             }
@@ -78,7 +79,7 @@ public class bazi {
         String voter=vote.substring(0,vote.indexOf(" "));
         String vote_to=vote.substring(vote.indexOf(" ")+1);
         for (int y=0;y<n;y++){
-            if(players[y].name.equals(voter)){
+            if(players[y].name.contains(voter)){
             }
             else
                 tedad++;
@@ -92,7 +93,7 @@ public class bazi {
            return;}
         for (int y=0;y<n;y++){
             int k=-1;
-            if(players[y].name.equals(vote_to))
+            if(players[y].name.contains(vote_to))
                 k=y;
             if(k>=0&&players[k].dead==1){
                 System.out.println("votee already dead");
@@ -114,18 +115,17 @@ public class bazi {
                 day_dead = players[z].name;
                 continue;
             }
-            if (players[z].dayvote == max) {
-                max = -1;
-                break;
+        }
+        int tedad=0;
+        for (int z = 0; z < n; z++) {
+            if (max == players[z].dayvote) {
+                tedad++;
             }
         }
-        for(int y=0;y<n;y++){
-            players[y].dayvote=0;
-        }
-        if (max == -1) {
-            return "nobody died";
-        }
-        if (max > -1&&players[dead].naghsh == 4) {
+        if (tedad>1){
+            return "nobody died";}
+
+        if (players[dead].naghsh == 4) {
                 return "Joker won!"; }
         else {
             String result = day_dead + " " + " died";
@@ -227,6 +227,7 @@ public class bazi {
         Scanner scanner = new Scanner(System.in);
         int i=0;
         int dor=0;
+        int payan=0;
         int day=0,night=0;
        out: while (true) {
            String a = scanner.nextLine();
@@ -234,14 +235,16 @@ public class bazi {
                int space = a.indexOf(" ");
                String c1 = a.substring(space + 1);
                String[] c2 = new String[1000];
-               for (int j = 0; c1.indexOf(" ") != 0; j++) {
+               for (int j = 0; c1.contains(" ");j++) {
                    space = c1.indexOf(" ");
                    String p = c1.substring(0, space);
                    c1 = c1.substring(space + 1);
                    c2[j] = p;
                    n++;
                }
-               create(c2, n);
+               c2[n]=c1;
+               n++;
+               create(c2,n);
                i++;
                continue;
            } else if (i == 0) {
@@ -253,29 +256,33 @@ public class bazi {
                    i++;
                    continue;
                }
+               if(a.contains("get")){
+                   get_game_state();
+                   continue ;
+               }
                if (a.contains("start")) {
                    if (dor > 0) {
                        System.out.println("game has already started");
-                       continue;
-                   } else {
+                       continue; }
+                   else {
                        start();
                        dor++;
-                       i++;
-                   }
+                       i++; }
                }
-               if(a.contains("get")){
-                  get_game_state();
-               }
+
                mid:
                while (true) {
                    if (chek()==1){
                        System.out.println("Mafia won!");
+                       break out;
                    }
                    if (chek()==-1){
                        System.out.println("Villagers won!");
+                       break out;
                    }
                    if (chek() == 0) {
                        day++;
+                       System.out.println("Day" + day);
                        String si = " ";
                        for (int z = 0; z < n; z++) {
                            if (players[z].silent) {
@@ -283,21 +290,24 @@ public class bazi {
                            }
                        }
                        String vote = " ";
-                       System.out.println("Day" + day);
                        in:
                        while (true) {
                            vote = scanner.nextLine();
                            if (vote.contains("end_vote")) {
                                System.out.println(day_result());
                                if (day_result().contains("Joker won!")) {
-                                   break out;
-                               } else
+                                   break out; }
+                               else{
+                                   for (int j=0;j<n;j++){
+                                       players[j].dayvote=0;}
                                    break in;
+                               }
+
                            } else {
                                day(vote, si);
                            }
                        }
-                       night++;
+                    /*   night++;
                        System.out.println("Night" + night);
                        int tedad = 0;
                        for (int x = 0; x < n; x++) {
@@ -353,11 +363,11 @@ public class bazi {
                                }
                                continue inner;
                            }
-                       }
+                       }*/
                    }
                }
 
            }
-       }
+           }
      }
 }

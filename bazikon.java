@@ -1,14 +1,15 @@
 public class bazikon {
-   static String name;
-  static String naghsh1;
-   static int naghsh=0;
-   static int nightvote;
-    static int dayvote;
-   static int nejat_pezeshk=0;
-   static boolean silent;
-   static int dead=0;
-   static int bulletproof=0;
-    public static void teeen_naghsh(String n){
+   String name;
+   String naghsh1;
+   int naghsh=0;
+    int nightvote=0;
+     int dayvote=0;
+    int nejat_pezeshk=0;
+    boolean silent;
+    int dead=0;
+    int bulletproof=0;
+
+    public  void teeen_naghsh(String n){
         if(n.equals("mafia")){
             naghsh1="mafia";
             naghsh=1;
