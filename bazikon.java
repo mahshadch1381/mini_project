@@ -7,6 +7,7 @@ public class bazikon {
    static boolean nejat_pezeshk;
    static boolean silent;
    static int dead=0;
+   static int bulletproof=0;
     public static void teeen_naghsh(String n){
         if(n.equals("mafia")){
             naghsh1="mafia";
@@ -31,6 +32,7 @@ public class bazikon {
        else if(n.equals("bulletproof")){
             naghsh1="bulletproof";
             naghsh=-4;
+            bulletproof=1;
         }
       else if(n.equals("godfather")){
             naghsh1="godfather";

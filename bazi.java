@@ -85,6 +85,9 @@ public class bazi {
                 break;
             }
         }
+        for(int y=0;y<n;y++){
+            players[y].dayvote=0;
+        }
         if (max == -1) {
             return "nobody died";
         }
@@ -92,6 +95,7 @@ public class bazi {
                 return "Joker won!"; }
         else {
             String result = day_dead + " " + " died";
+            players[dead].dead=1;
             return result; }
     }
     public static void main(String []args){
@@ -134,26 +138,109 @@ public class bazi {
                    dor++;
                    i++;}
                 }
-                    String si=" ";
-                   for (int z=0;z<n;z++){
-                       if(players[z].silent){
-                           si=players[z].name;}
-                   }
-                   String vote=" ";
-                  in : while (true){
-                       vote=scanner.nextLine();
-                       if(vote.contains("end_vote")){
-                           System.out.println(day_result());
-                           if(day_result().contains("Joker won!")) {
-                               break out; }
-                           else
-                               break in;
-                       }
-                       else {
-                         day(vote,si);
-                       }
-                  }
+                mid :while (true) {
+                    day++;
+                    String si = " ";
+                    for (int z = 0; z < n; z++) {
+                        if (players[z].silent) {
+                            si = players[z].name;
+                        }
+                    }
+                    String vote = " ";
+                    System.out.println("Day"+day);
+                    in:while (true) {
+                        vote = scanner.nextLine();
+                        if (vote.contains("end_vote")) {
+                            System.out.println(day_result());
+                            if (day_result().contains("Joker won!")) {
+                                break out; }
+                            else
+                                break in; }
+                        else {
+                            day(vote, si); }
+                    }
+                   night++;
+                    System.out.println("Night"+night);
+                    int tedad=0;
+                    for(int x=0;x<n;x++){
+                        if(players[x].dead==0){
+                            if(players[x].naghsh==1||players[x].naghsh==-2||players[x].naghsh==-3||players[x].naghsh==2){
+                                System.out.print(players[x].name);
+                                System.out.println(":"+players[x].naghsh1);
+                                tedad++;
+                            }
+                            if(players[x].naghsh==3){
+                                System.out.print(players[x].name);
+                                System.out.println(":"+players[x].naghsh1);
+                                tedad++;
+                            }
+                        }
+                        else
+                            continue ;
+                    }
+                    int c=0;
+                   while(c<tedad){
+                        int f1=0,f2=0;
+                        String shab=scanner.nextLine();
+                        String fael=shab.substring(0,shab.indexOf(" "));
+                        String mafuol=shab.substring(shab.indexOf(" ")+1);
+                        for(int y=0;y<n;y++){
+                            if(fael.equals(players[y].name)){
+                                f1=y; }
+                            if (mafuol.equals(players[y].name)){
+                                f2=y; }
+                        }
+                        if(players[f1].dead==1||players[f2].dead==1){
+                            System.out.println("user is dead");
+                            continue ; }
+                        if (players[f1].naghsh!=1||players[f1].naghsh!=2||players[f1].naghsh!=3||players[f1].naghsh!=-2||players[f1].naghsh!=-3){
+                            System.out.println("user can not wake up during night");
+                            continue ; }
+                        if(players[f1].naghsh==-2){
+                            if (players[f2].naghsh==1||players[f2].naghsh==2){
+                                System.out.println("YES");
+                            }
+                            else
+                                System.out.println("NO");
+                            c++; }
+                        if(players[f1].naghsh==-3){
+                           players[f2].nejat_pezeshk=true;
+                           c++; }
+                        if(players[f1].naghsh==3){
+                            players[f2].silent=true;
+                            c++; }
+                       if(players[f1].naghsh==1||players[f1].naghsh==2){
+                           int [] ray=new int[100];
+                           ray[f1]=f2;
+                           while (true){
+                               String vote_n=scanner.nextLine();
+                               if (vote_n.contains("end vote")){
 
+                               }
+                               else {
+                                   String voter_n = vote_n.substring(0, vote_n.indexOf(" "));
+                                   String vote_to_n = vote_n.substring(vote_n.indexOf(" ") + 1);
+                                   int v1=0,v2=0;
+                                   for(int y=0;y<n;y++){
+                                       if(voter_n.equals(players[y].name)){
+                                           v1=y; }
+                                       if (vote_to_n.equals(players[y].name)){
+                                           v2=y; }
+                                   }
+                                   ray[v1]=v2;
+                                   continue ;
+                               }
+                               for (int m=0;m<100;m++){
+                                   if(ray[m]>0){
+                                       players[ray[m]].nightvote++;
+                                       continue ;
+                                   }
+                                   else
+                                       continue ;
+                               }
+                       }
+                    }
+                }
                }
             }
 
