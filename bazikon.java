@@ -1,11 +1,12 @@
 public class bazikon {
    static String name;
   static String naghsh1;
-   static int naghsh;
+   static int naghsh=0;
    static int nightvote;
     static int dayvote;
    static boolean nejat_pezeshk;
    static boolean silent;
+   static int dead=0;
     public static void teeen_naghsh(String n){
         if(n.equals("mafia")){
             naghsh1="mafia";
@@ -25,7 +26,7 @@ public class bazikon {
         }
        else if(n.equals("Joker")){
             naghsh1="Joker";
-            naghsh=0;
+            naghsh=4;
         }
        else if(n.equals("bulletproof")){
             naghsh1="bulletproof";
