@@ -2,8 +2,39 @@ import java.util.Scanner;
 public class bazi {
     static bazikon []players =new bazikon[1000];
      static int n;
-     public static void chek(){
-
+     public static int chek(){
+         int tedad_ma=0,tedad_shahr=0;
+      for (int i=0;i<n;i++){
+          if(players[i].dead==0&&(players[i].naghsh==1||players[i].naghsh==2||players[i].naghsh==3)){
+              tedad_ma++;
+          }
+          if(players[i].dead==0&&(players[i].naghsh==-1||players[i].naghsh==-2||players[i].naghsh==-3)){
+              tedad_shahr++;
+          }
+      }
+      if (tedad_ma>=tedad_shahr){
+          return 1;
+      }
+      if (tedad_ma==0&&tedad_shahr>0){
+          return -1;
+      }
+      else
+          return 0;
+     }
+     public static void get_game_state(){
+         int tedad_ma=0,tedad_shahr=0;
+         for (int i=0;i<n;i++){
+             if(players[i].dead==0&&(players[i].naghsh==1||players[i].naghsh==2||players[i].naghsh==3)){
+                 tedad_ma++;
+             }
+             if(players[i].dead==0&&(players[i].naghsh==-1||players[i].naghsh==-2||players[i].naghsh==-3)){
+                 tedad_shahr++;
+             }
+         }
+         String mafi="Mafia ="+tedad_ma;
+         String shahr="Villager ="+tedad_shahr;
+         System.out.println(mafi);
+         System.out.println(shahr);
      }
     public static void create(String [] a ,int n){
        for (int i=0;i<n;i++){
@@ -232,82 +263,101 @@ public class bazi {
                        i++;
                    }
                }
-               mid:while (true) {
-                   day++;
-                   String si = " ";
-                   for (int z = 0; z < n; z++) {
-                       if (players[z].silent) {
-                           si = players[z].name; }
+               if(a.contains("get")){
+                  get_game_state();
+               }
+               mid:
+               while (true) {
+                   if (chek()==1){
+                       System.out.println("Mafia won!");
                    }
-                   String vote = " ";
-                   System.out.println("Day" + day);
-                   in:while (true) {
-                       vote = scanner.nextLine();
-                       if (vote.contains("end_vote")) {
-                           System.out.println(day_result());
-                           if (day_result().contains("Joker won!")) {
-                               break out;
+                   if (chek()==-1){
+                       System.out.println("Villagers won!");
+                   }
+                   if (chek() == 0) {
+                       day++;
+                       String si = " ";
+                       for (int z = 0; z < n; z++) {
+                           if (players[z].silent) {
+                               si = players[z].name;
+                           }
+                       }
+                       String vote = " ";
+                       System.out.println("Day" + day);
+                       in:
+                       while (true) {
+                           vote = scanner.nextLine();
+                           if (vote.contains("end_vote")) {
+                               System.out.println(day_result());
+                               if (day_result().contains("Joker won!")) {
+                                   break out;
+                               } else
+                                   break in;
+                           } else {
+                               day(vote, si);
+                           }
+                       }
+                       night++;
+                       System.out.println("Night" + night);
+                       int tedad = 0;
+                       for (int x = 0; x < n; x++) {
+                           if (players[x].dead == 0) {
+                               if (players[x].naghsh == 1 || players[x].naghsh == -2 || players[x].naghsh == -3 || players[x].naghsh == 2) {
+                                   System.out.print(players[x].name);
+                                   System.out.println(":" + players[x].naghsh1);
+                                   tedad++;
+                               }
+                               if (players[x].naghsh == 3) {
+                                   System.out.print(players[x].name);
+                                   System.out.println(":" + players[x].naghsh1);
+                                   tedad++;
+                               }
                            } else
-                               break in;
-                       } else {
-                           day(vote, si);
+                               continue;
                        }
-                   }
-                   night++;
-                   System.out.println("Night" + night);
-                   int tedad = 0;
-                   for (int x = 0; x < n; x++) {
-                       if (players[x].dead == 0) {
-                           if (players[x].naghsh == 1 || players[x].naghsh == -2 || players[x].naghsh == -3 || players[x].naghsh == 2) {
-                               System.out.print(players[x].name);
-                               System.out.println(":" + players[x].naghsh1);
-                               tedad++; }
-                           if (players[x].naghsh == 3) {
-                               System.out.print(players[x].name);
-                               System.out.println(":" + players[x].naghsh1);
-                               tedad++; }
-                       }
-                       else
-                           continue;
-                   }
-                  inner: while (true) {
-                       String shab = scanner.nextLine();
-                       int f1 = 0, f2 = 0;
-                       String fael = shab.substring(0, shab.indexOf(" "));
-                       String mafuol = shab.substring(shab.indexOf(" ") + 1);
-                       if (shab.contains("end night")) {
-                           continue mid; }
-                       else {
-                           night_part1(shab);
-                           if (players[f1].naghsh == 1 || players[f1].naghsh == 2) {
-                               int[] ray = new int[100];
-                               ray[f1] = f2;
-                              in2: while (true) {
-                                   String vote_n = scanner.nextLine();
-                                   if (vote_n.contains("end vote")) {
-                                      night_part2(ray);
-                                      continue mid; }
-                                   else {
-                                       String voter_n = vote_n.substring(0, vote_n.indexOf(" "));
-                                       String vote_to_n = vote_n.substring(vote_n.indexOf(" ") + 1);
-                                       int v1 = 0, v2 = 0;
-                                       for (int y = 0; y < n; y++) {
-                                           if (voter_n.equals(players[y].name)) {
-                                               v1 = y; }
-                                           if (vote_to_n.equals(players[y].name)) {
-                                               v2 = y; }
+                       inner:
+                       while (true) {
+                           String shab = scanner.nextLine();
+                           int f1 = 0, f2 = 0;
+                           String fael = shab.substring(0, shab.indexOf(" "));
+                           String mafuol = shab.substring(shab.indexOf(" ") + 1);
+                           if (shab.contains("end night")) {
+                               continue mid;
+                           } else {
+                               night_part1(shab);
+                               if (players[f1].naghsh == 1 || players[f1].naghsh == 2) {
+                                   int[] ray = new int[100];
+                                   ray[f1] = f2;
+                                   in2:
+                                   while (true) {
+                                       String vote_n = scanner.nextLine();
+                                       if (vote_n.contains("end vote")) {
+                                           night_part2(ray);
+                                           continue mid;
+                                       } else {
+                                           String voter_n = vote_n.substring(0, vote_n.indexOf(" "));
+                                           String vote_to_n = vote_n.substring(vote_n.indexOf(" ") + 1);
+                                           int v1 = 0, v2 = 0;
+                                           for (int y = 0; y < n; y++) {
+                                               if (voter_n.equals(players[y].name)) {
+                                                   v1 = y;
+                                               }
+                                               if (vote_to_n.equals(players[y].name)) {
+                                                   v2 = y;
+                                               }
+                                           }
+                                           ray[v1] = v2;
+                                           continue in2;
                                        }
-                                       ray[v1] = v2;
-                                       continue in2;
                                    }
                                }
+                               continue inner;
                            }
-                           continue inner;
                        }
                    }
                }
+
            }
-
-
-       }}
+       }
+     }
 }
