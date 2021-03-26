@@ -4,7 +4,7 @@ public class bazikon {
    static int naghsh=0;
    static int nightvote;
     static int dayvote;
-   static boolean nejat_pezeshk;
+   static int nejat_pezeshk=0;
    static boolean silent;
    static int dead=0;
    static int bulletproof=0;
