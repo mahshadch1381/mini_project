@@ -2,13 +2,11 @@ public class bazikon {
    String name;
    String naghsh1;
    int naghsh=0;
-    int nightvote=0;
-     int dayvote=0;
-    int nejat_pezeshk=0;
+   int nightvote;
+   int dayvote;
+   int nejat_pezeshk;
     boolean silent;
-    int dead=0;
-    int bulletproof=0;
-    int tedad_estelam=0;
+    int dead;
     public  void teeen_naghsh(String n){
         if(n.equals("mafia")){
             naghsh1="mafia";
@@ -21,7 +19,7 @@ public class bazikon {
        else if(n.equals("detective")){
             naghsh1="detective";
             naghsh=-2;
-            tedad_estelam=1;
+
         }
        else if(n.equals("villager")){
             naghsh1="villager";
@@ -34,7 +32,7 @@ public class bazikon {
        else if(n.equals("bulletproof")){
             naghsh1="bulletproof";
             naghsh=-4;
-            bulletproof=1;
+
         }
       else if(n.equals("godfather")){
             naghsh1="godfather";
