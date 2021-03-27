@@ -8,7 +8,7 @@ public class bazikon {
     boolean silent;
     int dead=0;
     int bulletproof=0;
-
+    int tedad_estelam=0;
     public  void teeen_naghsh(String n){
         if(n.equals("mafia")){
             naghsh1="mafia";
@@ -21,6 +21,7 @@ public class bazikon {
        else if(n.equals("detective")){
             naghsh1="detective";
             naghsh=-2;
+            tedad_estelam=1;
         }
        else if(n.equals("villager")){
             naghsh1="villager";

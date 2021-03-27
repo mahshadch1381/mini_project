@@ -21,6 +21,14 @@ public class bazi {
       else
           return 0;
      }
+     public static boolean mojod(String name){
+         for (int i=0;i<n;i++){
+             if(players[i].name.equals(name)){
+                 return true;
+             }
+         }
+         return false;
+     }
      public static void get_game_state(){
          int tedad_ma=0,tedad_shahr=0;
          for (int i=0;i<n;i++){
@@ -127,6 +135,7 @@ public class bazi {
                 tedad++;
             }
         }
+
         if (tedad>1){
             return "nobody died";}
 
@@ -149,7 +158,11 @@ public class bazi {
                 f2 = y;
             }
         }
-        if (players[f1].dead == 1 || players[f2].dead == 1) {
+        if(players[f1].dead==0&&players[f1].naghsh==-2&&players[f1].tedad_estelam==1&&players[f2].dead==1){
+            System.out.println("suspect is dead");
+            return;
+        }
+        else if (players[f1].dead == 1 || players[f2].dead == 1) {
             System.out.println("user is dead");
             return;
         }
@@ -157,11 +170,20 @@ public class bazi {
             System.out.println("user can not wake up during night");
            return;
         }
-       else if (players[f1].naghsh == -2) {
+       else if (players[f1].naghsh == -2&&players[f1].tedad_estelam==1) {
+           if(mojod(mafuol)){
             if (players[f2].naghsh == 1 || players[f2].naghsh == 2) {
                 System.out.println("YES");
             } else
                 System.out.println("NO");
+            players[f1].tedad_estelam=0;
+            return;}
+           else{
+               System.out.println("user not found");
+               return; }
+        }
+       else if(players[f1].naghsh == -2&&players[f1].tedad_estelam==0){
+            System.out.println("detective has already asked");
             return;
         }
        else if (players[f1].naghsh == -3) {
@@ -246,6 +268,8 @@ public class bazi {
                  players[j].nejat_pezeshk=0; }
              if (players[j].nightvote>0){
                  players[j].nightvote=0; }
+             if (players[j].naghsh==-2){
+                 players[j].tedad_estelam=1; }
          }
     }
     public static void main(String []args){
@@ -318,14 +342,18 @@ public class bazi {
                        in:
                        while (true) {
                            vote = scanner.nextLine();
+                           if(vote.contains("get")){
+                               get_game_state();
+                               continue in;
+                           }
                            if(vote.contains("start")){
                                System.out.println("game has already started");
                                continue; }
                            if (vote.contains("end_vote")) {
                                System.out.println(day_result());
                                if (day_result().contains("Joker won!")) {
-                                   break out;
-                               } else {
+                                   break out;}
+                                else {
                                    for (int j = 0; j < n; j++) {
                                        players[j].dayvote = 0;
                                    }
@@ -366,6 +394,10 @@ public class bazi {
                            inner:
                            while (true) {
                                String shab = scanner.nextLine();
+                               if(vote.contains("get")){
+                                   get_game_state();
+                                   continue inner;
+                               }
                                if(vote.contains("start")){
                                    System.out.println("game has already started");
                                    continue inner;}
@@ -385,11 +417,25 @@ public class bazi {
                                    }
                                    night_part1(shab);
                                    if (players[f1].naghsh == 1 || players[f1].naghsh == 2 || players[f1].naghsh == 3) {
+                                       if (players[f2].dead==1){
+                                           System.out.println("votee already dead");
+                                           continue inner;
+                                       }
                                        int[] ray = new int[100];
+                                       if(mojod(mafuol)){
+                                       }
+                                       else {
+                                           System.out.println("user not joined");
+                                           continue inner;
+                                       }
                                        ray[f1] = f2;
                                        in2:
                                        while (true) {
                                            String vote_n = scanner.nextLine();
+                                           if(vote.contains("get")){
+                                               get_game_state();
+                                               continue in2;
+                                           }
                                            if (vote_n.contains("end_night")) {
                                                night_part2(ray);
                                                continue mid;
