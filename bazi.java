@@ -194,29 +194,28 @@ public class bazi {
                 f2 = y;
             }
         }
-        if(players[f1].dead==0&&players[f1].naghsh==-2&&((detective)players[f1]).tedad_estelam==1&&players[f2].dead==1){
-            System.out.println("suspect is dead");
-            return;
-        }
-        else if (players[f1].dead == 1 || players[f2].dead == 1) {
+         if (players[f1].dead == 1 || players[f2].dead == 1) {
             System.out.println("user is dead");
             return;
         }
+         else if (players[f1].naghsh == -2&&((detective)players[f1]).tedad_estelam==1) {
+             if(mojod(mafuol)){
+                 if(players[f2].dead==1){
+                     System.out.println("suspect is dead");
+                     return; }
+                 if (players[f2].naghsh == 1 || players[f2].naghsh == 2) {
+                     System.out.println("YES");
+                 } else
+                     System.out.println("NO");
+                 ((detective)players[f1]).tedad_estelam=0;
+                 return;}
+             else{
+                 System.out.println("user not found");
+                 return; }
+         }
         else if (players[f1].naghsh == 4 || players[f1].naghsh== -1 || players[f1].naghsh ==-4) {
             System.out.println("user can not wake up during night");
            return;
-        }
-       else if (players[f1].naghsh == -2&&((detective)players[f1]).tedad_estelam==1) {
-           if(mojod(mafuol)){
-            if (players[f2].naghsh == 1 || players[f2].naghsh == 2) {
-                System.out.println("YES");
-            } else
-                System.out.println("NO");
-               ((detective)players[f1]).tedad_estelam=0;
-            return;}
-           else{
-               System.out.println("user not found");
-               return; }
         }
        else if(players[f1].naghsh == -2&&((detective)players[f1]).tedad_estelam==0){
             System.out.println("detective has already asked");
@@ -303,6 +302,30 @@ public class bazi {
                  ((detective)players[j]).tedad_estelam=1; }
          }
     }
+    public static String swap(String a){
+        int index_1=0,index_2=0;
+        int s1=a.indexOf(" ");
+        String a1=a.substring(s1+1);
+        int s2=a1.indexOf(" ");
+        String a2=a1.substring(0,s2);
+        String a3=a1.substring(s2+1);
+        for (int y = 0; y < n; y++) {
+            if (a2.equals(players[y].name)) {
+                index_1 = y;
+            }
+            if (a3.equals(players[y].name)) {
+                index_2 = y;
+            }
+        }
+        if(players[index_1].dead==1||players[index_2].dead==1){
+            return "false";
+        }
+        else {
+            players[index_1].name=a3;
+            players[index_2].name=a2;
+           return a2+" "+"swapped characters with "+a3;
+        }
+    }
     public static void main(String []args){
         Scanner scanner = new Scanner(System.in);
         int i=0;
@@ -373,6 +396,10 @@ public class bazi {
                        in:
                        while (true) {
                            vote = scanner.nextLine();
+                           if(vote.contains("swap")){
+                               System.out.println("voting in progress");
+                               continue in;
+                           }
                            if(vote.contains("get")){
                                get_game_state();
                                continue in;
@@ -425,6 +452,10 @@ public class bazi {
                            inner:
                            while (true) {
                                String shab = scanner.nextLine();
+                               if(shab.contains("swap")){
+                                   System.out.println("can’t swap before end of night");
+                                   continue inner;
+                               }
                                if(shab.contains("get")){
                                    get_game_state();
                                    continue inner;
@@ -461,11 +492,22 @@ public class bazi {
                                        in2:
                                        while (true) {
                                            String vote_n = scanner.nextLine();
-                                           if(vote.contains("get")){
+                                           if(vote_n.contains("swap")){
+                                               System.out.println("can’t swap before end of night");
+                                               continue in2;
+                                           }
+                                           if(vote_n.contains("get")){
                                                get_game_state();
                                                continue in2;
                                            }
                                            if (vote_n.contains("end_night")) {
+                                               String swap= scanner.nextLine();
+                                               if(swap(swap).contains("false")){
+                                                   System.out.println("user is dead");
+                                               }
+                                               else {
+                                                   System.out.println(swap(swap));
+                                               }
                                                night_part2(ray);
                                                for (int z=0;z<n;z++){
                                                    if(players[z].dead==0&&players[z].silent){
