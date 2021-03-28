@@ -39,18 +39,21 @@ public class bazi {
 
     public static int chek(){
          int tedad_ma=0,tedad_shahr=0;
-      for (int i=0;i<n;i++){
-          if(players[i].dead==0&&(players[i].naghsh==1||players[i].naghsh==2||players[i].naghsh==3)){
+      for (int i=0;i<n;i++) {
+          if (players[i].dead == 0 && (players[i].naghsh == 1 || players[i].naghsh == 2 || players[i].naghsh == 3)) {
               tedad_ma++;
           }
-          if(players[i].dead==0&&(players[i].naghsh==-1||players[i].naghsh==-2||players[i].naghsh==-3||players[i].naghsh==-4)){
+          if (players[i].dead == 0 && (players[i].naghsh == -1 || players[i].naghsh == -2 || players[i].naghsh == -3)) {
               tedad_shahr++;
           }
       }
-      if (tedad_ma>=tedad_shahr){
+        if (tedad_ma==tedad_shahr){
+            return 1;
+        }
+     else if (tedad_ma>tedad_shahr){
           return 1;
       }
-      if (tedad_ma==0&&tedad_shahr>0){
+     else if (tedad_ma==0&&tedad_shahr>0){
           return -1;
       }
       else
@@ -302,7 +305,7 @@ public class bazi {
                  ((detective)players[j]).tedad_estelam=1; }
          }
     }
-    public static String swap(String a){
+    /*public static String swap(String a){
         int index_1=0,index_2=0;
         int s1=a.indexOf(" ");
         String a1=a.substring(s1+1);
@@ -325,12 +328,11 @@ public class bazi {
             players[index_2].name=a2;
            return a2+" "+"swapped characters with "+a3;
         }
-    }
+    }*/
     public static void main(String []args){
         Scanner scanner = new Scanner(System.in);
         int i=0;
         int dor=0;
-        int payan=0;
         int day=0,night=0;
         String[] c2 = new String[1000];
        out: while (true) {
@@ -449,39 +451,79 @@ public class bazi {
                                } else
                                    continue;
                            }
+                           int[] ray = new int[100];
                            inner:
                            while (true) {
                                String shab = scanner.nextLine();
-                               if(shab.contains("swap")){
-                                   System.out.println("can’t swap before end of night");
-                                   continue inner;
-                               }
-                               if(shab.contains("get")){
+                              if(shab.contains("get")){
                                    get_game_state();
                                    continue inner;
                                }
-                               if(shab.contains("start")){
+                              else if(shab.contains("start")){
                                    System.out.println("game has already started");
                                    continue inner;}
-                               if (shab.contains("end_night")) {
+                              else if (shab.contains("end_night")) {
+                                   night_part2(ray);
+                                   for (int z=0;z<n;z++){
+                                       if(players[z].dead==0&&players[z].silent){
+                                           System.out.println("Silenced "+players[z].name);
+                                           break; }
+                                   }
                                    continue mid; }
                                else {
-                                   night_part1(shab);
                                    int f1 = 0, f2 = 0;
-                                   String fael = shab.substring(0, shab.indexOf(" "));
+                                   String fael = shab.substring(0,shab.indexOf(" "));
                                    String mafuol = shab.substring(shab.indexOf(" ") + 1);
                                    for (int y = 0; y < n; y++) {
                                        if (fael.equals(players[y].name)) {
-                                           f1 = y; }
+                                           f1 = y;
+                                       }
                                        if (mafuol.equals(players[y].name)) {
-                                           f2 = y; }
+                                           f2 = y;
+                                       }
                                    }
-                                   if (players[f1].naghsh == 1 || players[f1].naghsh == 2 || players[f1].naghsh == 3) {
+                                   if (players[f1].dead == 1 || players[f2].dead == 1) {
+                                       System.out.println("user is dead");
+                                      continue inner;
+                                   }
+                                   else if (players[f1].naghsh == -2&&((detective)players[f1]).tedad_estelam==1) {
+                                       if(mojod(mafuol)){
+                                           if(players[f2].dead==1){
+                                               System.out.println("suspect is dead");
+                                               continue inner; }
+                                          else if (players[f2].naghsh == 1 || players[f2].naghsh == 2) {
+                                               System.out.println("YES");
+                                               ((detective)players[f1]).tedad_estelam=0;
+                                               continue inner;}
+                                            else{
+                                               System.out.println("NO");
+                                           ((detective)players[f1]).tedad_estelam=0;
+                                           continue inner;}}
+                                       else{
+                                           System.out.println("user not found");
+                                           continue inner;}
+                                   }
+                                   else if (players[f1].naghsh == 4 || players[f1].naghsh== -1 || players[f1].naghsh ==-4) {
+                                       System.out.println("user can not wake up during night");
+                                       continue inner;
+                                   }
+                                   else if(players[f1].naghsh == -2&&((detective)players[f1]).tedad_estelam==0){
+                                       System.out.println("detective has already asked");
+                                       continue inner;
+                                   }
+                                   else if (players[f1].naghsh == -3) {
+                                       players[f2].nejat_pezeshk = 1;
+                                       continue inner;
+                                   }
+                                   else if (players[f1].naghsh == 2) {
+                                       players[f2].silent = true;
+                                       continue inner;
+                                   }
+                                  else if (players[f1].naghsh == 1 || players[f1].naghsh == 2 || players[f1].naghsh == 3) {
                                        if (players[f2].dead==1){
                                            System.out.println("votee already dead");
                                            continue inner;
                                        }
-                                       int[] ray = new int[100];
                                        if(mojod(mafuol)){
                                        }
                                        else {
@@ -492,31 +534,13 @@ public class bazi {
                                        in2:
                                        while (true) {
                                            String vote_n = scanner.nextLine();
-                                           if(vote_n.contains("swap")){
-                                               System.out.println("can’t swap before end of night");
-                                               continue in2;
-                                           }
                                            if(vote_n.contains("get")){
                                                get_game_state();
                                                continue in2;
                                            }
-                                           if (vote_n.contains("end_night")) {
-                                               String swap= scanner.nextLine();
-                                               if(swap(swap).contains("false")){
-                                                   System.out.println("user is dead");
-                                               }
-                                               else {
-                                                   System.out.println(swap(swap));
-                                               }
-                                               night_part2(ray);
-                                               for (int z=0;z<n;z++){
-                                                   if(players[z].dead==0&&players[z].silent){
-                                                       System.out.println("Silenced "+players[z].name);
-                                                       break;
-                                                   }
-                                               }
-                                               continue mid;
-                                           } else {
+                                           if (vote_n.contains("end_vote")) {
+                                               continue inner;}
+                                           else {
                                                String voter_n = vote_n.substring(0,vote_n.indexOf(" "));
                                                String vote_to_n = vote_n.substring(vote_n.indexOf(" ") + 1);
                                                int v1 = 0, v2 = 0;
