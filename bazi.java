@@ -185,7 +185,7 @@ public class bazi {
             players[dead].dead=1;
             return result; }
     }
-    public static void night_part1(String shab){
+   /* public static void night_part1(String shab){
         int f1 = 0, f2 = 0;
         String fael = shab.substring(0,shab.indexOf(" "));
         String mafuol = shab.substring(shab.indexOf(" ") + 1);
@@ -235,7 +235,7 @@ public class bazi {
        else if (players[f1].naghsh == 1 || players[f1].naghsh == 3) {
             return;
         }
-    }
+    }*/
     public static void night_part2(int [] nazar){
         for (int m = 0;m < 100; m++) {
             if (nazar[m] > 0) {
