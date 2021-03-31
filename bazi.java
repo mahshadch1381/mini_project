@@ -2,35 +2,44 @@ import java.util.Scanner;
 public class bazi {
     static bazikon []players =new bazikon[1000];
     static int n;
+    static int assign=0;
     {
-        for (int i=0;i<n;i++){
+        for (int i=0;i<100;i++){
             players[i]=new bazikon(); }
     }
     public static void taeen_naghsh(String name,String n,int i){
         if(n.equals("mafia")){
            players[i]=new mafia(name);
+           assign++;
         }
         else if(n.equals("doctor")){
             players[i]=new doctor(name);
+            assign++;
         }
         else if(n.equals("detective")){
             players[i]=new detective(name);
+            assign++;
 
         }
         else if(n.equals("villager")){
             players[i]=new villager(name);
+            assign++;
         }
         else if(n.equals("Joker")){
             players[i]=new Joker(name);
+            assign++;
         }
         else if(n.equals("bulletproof")){
             players[i]=new bulletproof(name);
+            assign++;
         }
         else if(n.equals("godfather")){
             players[i]=new godfather(name);
+            assign++;
         }
         else   if(n.equals("silencer")){
             players[i]=new silencer(name);
+            assign++;
         }
         else {
             System.out.println("role not found");
@@ -84,6 +93,8 @@ public class bazi {
      }
     public static String [] create(String [] a ,int n) {
         String [] names=new String[n];
+       // for (int i=0;i<n;i++){
+           // players[i]=new bazikon(); }
         for (int i=0 ;i<n;i++){
             names[i]=a[i];
         }
@@ -109,17 +120,17 @@ public class bazi {
             System.out.println("user not found");
         }
     }
-    public static void start(){
-        for (int i=0;i<n;i++){
-            if(players[i].naghsh==0){
-                System.out.println("one or more player do not have a role");
-                 return;}
+    public static String start(){
+            if(assign!=n){
+                return "one or more player do not have a role";
+
         }
-        for (int i=0;i<n;i++){
-            String result=players[i].name+":"+" "+players[i].naghsh1;
-            System.out.println(result);
+        String result=players[0].name+":"+" "+players[0].naghsh1+"\n";
+        for (int i=1;i<n;i++){
+             result=result+players[i].name+":"+" "+players[i].naghsh1+"\n";
         }
-        System.out.println("Ready? Set! Go");
+        result=result+"Ready? Set! Go";
+        return result;
     }
     public static void day(String vote,String si){
         int tedad=0;
@@ -370,9 +381,14 @@ public class bazi {
                        System.out.println("game has already started");
                        continue; }
                    else {
-                       start();
+                     String result=start();
+                     if(result.contains("one or more player")){
+                         System.out.println(result);
+                         continue out;
+                     }else {
+                       System.out.println(result);
                        dor++;
-                       i++; }
+                       i++; }}
                }
 
                mid:
@@ -398,10 +414,6 @@ public class bazi {
                        in:
                        while (true) {
                            vote = scanner.nextLine();
-                           if(vote.contains("swap")){
-                               System.out.println("voting in progress");
-                               continue in;
-                           }
                            if(vote.contains("get")){
                                get_game_state();
                                continue in;
